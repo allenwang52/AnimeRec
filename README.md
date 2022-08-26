@@ -13,7 +13,7 @@ conda create -n my-env
 conda activate my-env
 
 Dependencies:
-conda install numpy
+conda install numpy=1.22.3 (need version under 1.23.0 to work with scipy)
 conda install pandas
 conda install scipy
 conda install scikit-learn
