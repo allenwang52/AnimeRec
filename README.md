@@ -1,7 +1,7 @@
 #AnimeRec
 
 Anime recommendation system that will recommend animes based on a user's preferences and watch history.\
-You can also keep track of animes you have watched and are currently watching and even have your own personal ranking lists.
+Users will also be able to keep track of animes watched and currently watching and even have a personal ranking lists.
 
 
 #Setup
