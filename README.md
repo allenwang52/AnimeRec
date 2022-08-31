@@ -8,7 +8,7 @@ Users will also be able to keep track of animes watched and currently watching a
 
 Using Miniconda with Python 3.9.12.
 
-Best practice to create a virtual environment before installing dependencies:
+Best practice to create a virtual environment before installing dependencies:\
 conda create -n my-env\
 conda activate my-env
 
