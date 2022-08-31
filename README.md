@@ -1,10 +1,10 @@
-#AnimeRec
+# AnimeRec
 
 Anime recommendation system that will recommend animes based on a user's preferences and watch history.\
 Users will also be able to keep track of animes watched and currently watching and even have a personal ranking lists.
 
 
-#Setup
+# Setup
 
 Using Miniconda with Python 3.9.12.\
 Best practice to create a virtual environment before installing dependencies.
