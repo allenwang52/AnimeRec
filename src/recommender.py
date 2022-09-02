@@ -27,9 +27,27 @@ if __name__ == '__main__':
     rating_path = 'data/rating.csv'
 
     anime_df = pd.read_csv(anime_path)
-    print(anime_df.head())
+    #print(anime_df.head())
     
     rating_df = pd.read_csv(rating_path)
-    print(rating_df.head())
+    #print(rating_df.head())
 
-    
+    # Percentage of null values in anime_df
+    #print(round(anime_df.isnull().sum().sort_values(ascending=False)/len(anime_df.index), 4)*100) 
+    # Null values in rating, genre, type
+
+    # Percentage of null values in rating_df
+    #print(round(rating_df.isnull().sum().sort_values(ascending=False)/len(rating_df.index), 4)*100) 
+    # No null values!
+
+    # Dropping data that has nan values for rating
+    anime_df = anime_df[~np.isnan(anime_df["rating"])]
+
+    # Filling nan values for genre with "Unknown"
+    anime_df["genre"] = anime_df["genre"].fillna("Unknown")
+    # Filling nan values for type with mode value of type
+    anime_df["type"] = anime_df["type"].fillna(anime_df["type"].dropna().mode().values[0])
+
+    # Checking to see we have no more null values
+    #print(anime_df.isnull().sum())
+    # No more null values!
