@@ -16,13 +16,7 @@ pd.options.display.max_columns
 warnings.filterwarnings("always")
 warnings.filterwarnings("ignore")
 
-if __name__ == '__main__':
-    anime=(input('What show did you recently finish?'))
-    # list all files under the input directory
-    for dirname, _, filenames in os.walk('data/'):
-        for filename in filenames:
-            print(os.path.join(dirname, filename))
-
+def anime_recommendation():
     # store file paths to variables
     anime_path = 'data/anime.csv'
     rating_path = 'data/rating.csv'
@@ -68,7 +62,7 @@ if __name__ == '__main__':
     #print(rated_anime_inner.shape)
     #print(rated_anime.shape) way to check total number or rows kept after each join type
 
-# Extract only user_id, name, and rating from the combined df
+    # Extract only user id, name, and user ratings from the combined df
     rated_anime = rated_anime[['user_id', 'name', 'rating_user']]
 
     # Create pivot table to simplify the formatting of the data
@@ -94,15 +88,20 @@ if __name__ == '__main__':
     #cosine model; this is where the fun begins :)
     anime_simularity = cosine_similarity(piv_sparse)
     anime_sim_df = pd.DataFrame(anime_simularity, index = pivot_norm.index, columns = pivot_norm.index)
+
+    return anime_sim_df
+
+if __name__ == '__main__':
+    # list all files under the input directory
+    # for dirname, _, filenames in os.walk('data/'):
+    #     for filename in filenames:
+    #         print(os.path.join(dirname, filename))
+
+    anime_sim_df=anime_recommendation()
+    anime=input('What show did you recently finish?')
     
-   
-    
-    def anime_recommendation(anime):
-        iter = 1
-        print('Since you watched {}, you might like these shows:\n'.format(anime))
-        for i in anime_sim_df.sort_values(by = anime, ascending = False).index[1:6]:
-            print(f'#{iter}: {i}, {round(anime_sim_df[i][anime]*100,2)}% match') 
-            iter += 1
-    
-    anime_recommendation(anime)
-    #print('got it')
+    iter = 1
+    print('Since you watched {}, you might like these shows:\n'.format(anime))
+    for i in anime_sim_df.sort_values(by = anime, ascending = False).index[1:6]:
+        print(f'#{iter}: {i}, {round(anime_sim_df[i][anime]*100,2)}% match') 
+        iter += 1
