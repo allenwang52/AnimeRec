@@ -45,7 +45,7 @@ def anime_recommendation():
     #genre mode here is TV
     
     # Checking to see we have no more null values
-    #print(anime_df.isnull().sum()); this command prints a sum of all of the cells with null values
+    #print(anime_df.isnull().sum())
     # No more null values!
 
     # Convert any -1 rating values to Nan; this will be for the normaliing part later (part of the cosine sim model)
@@ -58,9 +58,7 @@ def anime_recommendation():
      # Combine anime_df and rating_df (think of this as a SQL inner join)
     rated_anime = rating_df.merge(anime_df, left_on='anime_id', right_on='anime_id', suffixes=['_user', ''])
     # This is equivalent
-    #rated_anime_inner = rating_df.merge(anime_df, how='inner', on='anime_id', suffixes=['_user', ''])
-    #print(rated_anime_inner.shape)
-    #print(rated_anime.shape) way to check total number or rows kept after each join type
+    #rated_anime = rating_df.merge(anime_df, how='inner', on='anime_id', suffixes=['_user', ''])
 
     # Extract only user id, name, and user ratings from the combined df
     rated_anime = rated_anime[['user_id', 'name', 'rating_user']]
@@ -74,30 +72,32 @@ def anime_recommendation():
     # Replace NaN values with 0
     pivot_norm.fillna(0, inplace=True)
     
-    #now, transpose the data
+    # Transpose the data
     pivot_norm = pivot_norm.T
 
-    #drop values containing 0
+    # Drop columns that have all 0 values
     pivot_norm = pivot_norm.loc[:, (pivot_norm != 0).any(axis = 0)]
 
-    #now, take the new cleaned up table and convert it into a sparsed matrix format for the simularity calculation
-    #sparing = spreading out the data with mostly 0s for the machine learning computation
+    # Convert df into sparse matrix
+    # Sparing: Spreading out the data with mostly 0s for the machine learning computation
     piv_sparse = sp.sparse.csr_matrix(pivot_norm.values)
-    #print('got it') just to make sure everything ran correctly
+    print(piv_sparse.head())
 
-    #cosine model; this is where the fun begins :)
+    # Cosine model; this is where the fun begins :)
     anime_simularity = cosine_similarity(piv_sparse)
     anime_sim_df = pd.DataFrame(anime_simularity, index = pivot_norm.index, columns = pivot_norm.index)
 
     return anime_sim_df
 
 if __name__ == '__main__':
-    # list all files under the input directory
+    # List all files under the input directory
     # for dirname, _, filenames in os.walk('data/'):
     #     for filename in filenames:
     #         print(os.path.join(dirname, filename))
 
+    # Compute anime similarity data frame
     anime_sim_df=anime_recommendation()
+    # Get anime name from user input
     anime=input('What show did you recently finish?')
     
     iter = 1
