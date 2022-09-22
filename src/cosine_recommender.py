@@ -17,7 +17,7 @@ warnings.filterwarnings("always")
 warnings.filterwarnings("ignore")
 
 def anime_recommendation():
-    # store file paths to variables
+    # Store file paths to variables
     anime_path = 'data/anime.csv'
     rating_path = 'data/rating.csv'
 
@@ -42,7 +42,6 @@ def anime_recommendation():
     anime_df["genre"] = anime_df["genre"].fillna("Unknown")
     # Filling nan values for type with mode value of type
     anime_df["type"] = anime_df["type"].fillna(anime_df["type"].dropna().mode().values[0])
-    #genre mode here is TV
     
     # Checking to see we have no more null values
     #print(anime_df.isnull().sum())
@@ -51,6 +50,8 @@ def anime_recommendation():
     # Convert any -1 rating values to Nan; this will be for the normaliing part later (part of the cosine sim model)
     rating_df['rating'] = rating_df['rating'].apply(lambda x: np.nan if x==-1 else x)
 
+    # Convert all anime names to lower case
+    anime_df['name'] = anime_df['name'].apply(lambda x: x.lower())
 
     # Get animes that are of TV type
     anime_df = anime_df[anime_df['type'] == 'TV']
@@ -81,7 +82,6 @@ def anime_recommendation():
     # Convert df into sparse matrix
     # Sparing: Spreading out the data with mostly 0s for the machine learning computation
     piv_sparse = sp.sparse.csr_matrix(pivot_norm.values)
-    print(piv_sparse.head())
 
     # Cosine model; this is where the fun begins :)
     anime_simularity = cosine_similarity(piv_sparse)
@@ -97,8 +97,8 @@ if __name__ == '__main__':
 
     # Compute anime similarity data frame
     anime_sim_df=anime_recommendation()
-    # Get anime name from user input
-    anime=input('What show did you recently finish?')
+    # Get lower case anime name from user input
+    anime=input('What show did you recently finish?').lower()
     
     iter = 1
     print('Since you watched {}, you might like these shows:\n'.format(anime))
